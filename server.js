@@ -1,11 +1,10 @@
 const express = require("express");
-const db = require("./DB/Tracker-DB"); // ✅ import the db setup file
+const db = require("./DB/Tracker-DB");
 const app = express();
 const Port = 2039;
 
 app.use(express.json());
 
-// 📌 GET all books
 app.get("/books", (req, res) => {
   db.all("SELECT * FROM books", [], (err, rows) => {
     if (err)
@@ -14,7 +13,6 @@ app.get("/books", (req, res) => {
   });
 });
 
-// 📌 GET book by ID
 app.get("/books/:id", (req, res) => {
   db.get("SELECT * FROM books WHERE id = ?", [req.params.id], (err, row) => {
     if (err)
@@ -27,7 +25,6 @@ app.get("/books/:id", (req, res) => {
   });
 });
 
-// 📌 GET completed books
 app.get("/books/completed", (req, res) => {
   db.all("SELECT * FROM books WHERE completed = 1", [], (err, rows) => {
     if (err)
@@ -36,7 +33,6 @@ app.get("/books/completed", (req, res) => {
   });
 });
 
-// 📌 SEARCH books by title
 app.get("/books/search", (req, res) => {
   const { title } = req.query;
   if (!title)
@@ -55,7 +51,6 @@ app.get("/books/search", (req, res) => {
   );
 });
 
-// 📌 ADD a new book
 app.post("/books", (req, res) => {
   const { title, author, year } = req.body;
   if (!title || !author || !year) {
@@ -84,7 +79,6 @@ app.post("/books", (req, res) => {
   );
 });
 
-// 📌 UPDATE a book
 app.put("/books/:id", (req, res) => {
   const { title, author, year, completed } = req.body;
 
@@ -125,7 +119,6 @@ app.put("/books/:id", (req, res) => {
   );
 });
 
-// 📌 DELETE a book
 app.delete("/books/:id", (req, res) => {
   db.run("DELETE FROM books WHERE id = ?", [req.params.id], function (err) {
     if (err)
